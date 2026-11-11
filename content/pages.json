@@ -1,0 +1,158 @@
+[
+  {
+    "path": "",
+    "title": "Wedding & Mitzvah Favors and Stationery | Joyful Creations LI",
+    "description": "Where every celebration tells your story. Handmade, custom favors & stationery for weddings and bar & bat mitzvahs across Long Island, NYC, NJ & CT.",
+    "h1": "Handmade favors & stationery for weddings and bar & bat mitzvahs"
+  },
+  {
+    "path": "about",
+    "title": "About Jonah | Joyful Creations LI",
+    "description": "In the craft since 2010. Meet Jonah, the designer behind the handmade pieces at Joyful Creations LI.",
+    "h1": "Hi, I'm Jonah."
+  },
+  {
+    "path": "weddings",
+    "title": "Wedding Favors & Day-of Stationery | Joyful Creations LI",
+    "description": "Handmade wedding favors, menus, escort cards, seating charts and signage, custom-designed for your celebration.",
+    "h1": "Wedding favors & day-of stationery"
+  },
+  {
+    "path": "weddings/custom-favors",
+    "title": "Custom Wedding Favors Long Island & NYC | Joyful Creations LI",
+    "description": "Personalized, handmade wedding favors designed around your celebration in NY, NJ and CT.",
+    "h1": "Custom handmade wedding favors"
+  },
+  {
+    "path": "weddings/day-of-details",
+    "title": "Wedding Menus, Escort Cards & Seating Charts | Joyful Creations LI",
+    "description": "Custom menus, escort cards, table numbers, seating charts and day-of signage, handmade for your wedding.",
+    "h1": "Menus, escort cards, seating charts & day-of signage"
+  },
+  {
+    "path": "bar-bat-mitzvahs",
+    "title": "Bar & Bat Mitzvah Favors & Stationery | Joyful Creations LI",
+    "description": "Personalized bar and bat mitzvah favors and day-of stationery, handmade in NY, NJ and CT.",
+    "h1": "Bar & bat mitzvah favors and stationery"
+  },
+  {
+    "path": "bar-bat-mitzvahs/favors",
+    "title": "Personalized Bar & Bat Mitzvah Favors | Joyful Creations LI",
+    "description": "Handmade, personalized favors designed around the guest of honor.",
+    "h1": "Personalized bar & bat mitzvah favors"
+  },
+  {
+    "path": "bar-bat-mitzvahs/day-of-details",
+    "title": "Mitzvah Menus, Escort Cards & Seating Charts | Joyful Creations LI",
+    "description": "Custom menus, escort cards and seating charts for bar and bat mitzvahs.",
+    "h1": "Bar & bat mitzvah menus, escort cards & seating charts"
+  },
+  {
+    "path": "celebrations",
+    "title": "Other Celebrations | Joyful Creations LI",
+    "description": "Bridal showers and other celebrations, with favors and paper details made by hand. Weddings and mitzvahs stay in front.",
+    "h1": "Other celebrations"
+  },
+  {
+    "path": "celebrations/bridal-showers",
+    "title": "Bridal Shower Favors & Stationery | Joyful Creations LI",
+    "description": "Custom bridal shower favors and paper details, made by hand.",
+    "h1": "Bridal shower favors & stationery"
+  },
+  {
+    "path": "stationery",
+    "title": "Custom Stationery & Invitations | Joyful Creations LI",
+    "description": "Invitations and day-of stationery designed in-house and finished by hand.",
+    "h1": "Stationery"
+  },
+  {
+    "path": "stationery/invitations",
+    "title": "Custom Wedding Invitations NY | Joyful Creations LI",
+    "description": "Custom wedding invitation suites designed and finished by hand.",
+    "h1": "Custom wedding invitations & suites"
+  },
+  {
+    "path": "stationery/portfolio",
+    "title": "Portfolio | Joyful Creations LI",
+    "description": "Selected handmade favors and stationery. Photography credited to its photographers.",
+    "h1": "Stationery portfolio"
+  },
+  {
+    "path": "stationery/inquiry",
+    "title": "Request a Consultation | Joyful Creations LI",
+    "description": "Tell us about your celebration and we'll reply by email.",
+    "h1": "Start a stationery inquiry"
+  },
+  {
+    "path": "portfolio",
+    "title": "Portfolio | Joyful Creations LI",
+    "description": "Selected handmade favors and stationery. Photography credited to its photographers.",
+    "h1": "Portfolio"
+  },
+  {
+    "path": "process",
+    "title": "How We Work | Joyful Creations LI",
+    "description": "From consultation to handmade pieces: our process and typical lead time.",
+    "h1": "How we work"
+  },
+  {
+    "path": "service-areas",
+    "title": "Service Areas | Joyful Creations LI",
+    "description": "Handmade favors and stationery for celebrations in Long Island, New York City, New Jersey, and Connecticut.",
+    "h1": "Service areas"
+  },
+  {
+    "path": "service-areas/long-island",
+    "title": "Custom Favors & Stationery in Long Island | Joyful Creations LI",
+    "description": "Handmade favors and stationery for celebrations in Long Island.",
+    "h1": "Custom favors & stationery in Long Island"
+  },
+  {
+    "path": "service-areas/nyc",
+    "title": "Custom Favors & Stationery in New York City | Joyful Creations LI",
+    "description": "Handmade favors and stationery for celebrations in New York City.",
+    "h1": "Custom favors & stationery in New York City"
+  },
+  {
+    "path": "service-areas/new-jersey",
+    "title": "Custom Favors & Stationery in New Jersey | Joyful Creations LI",
+    "description": "Handmade favors and stationery for celebrations in New Jersey.",
+    "h1": "Custom favors & stationery in New Jersey"
+  },
+  {
+    "path": "service-areas/connecticut",
+    "title": "Custom Favors & Stationery in Connecticut | Joyful Creations LI",
+    "description": "Handmade favors and stationery for celebrations in Connecticut.",
+    "h1": "Custom favors & stationery in Connecticut"
+  },
+  {
+    "path": "faq",
+    "title": "FAQ | Joyful Creations LI",
+    "description": "Lead times, custom work, payment methods and service areas.",
+    "h1": "FAQ"
+  },
+  {
+    "path": "quote",
+    "title": "Request a Consultation | Joyful Creations LI",
+    "description": "Tell us about your celebration and we'll reply by email.",
+    "h1": "Request a consultation"
+  },
+  {
+    "path": "contact",
+    "title": "Contact | Joyful Creations LI",
+    "description": "Email info@joyfulcreationsli.com to plan your wedding, mitzvah or celebration.",
+    "h1": "Contact"
+  },
+  {
+    "path": "privacy",
+    "title": "Privacy | Joyful Creations LI",
+    "description": "How the consultation and stationery forms are meant to be used. This review build does not send them. Legal wording is not approved yet.",
+    "h1": "Privacy"
+  },
+  {
+    "path": "thank-you",
+    "title": "Thank You | Joyful Creations LI",
+    "description": "Thank you — we'll review your request and reply by email. No reply time is promised.",
+    "h1": "Thank you"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "note": "Only records with estado publicado and a non-empty url may be rendered. This file starts with every record pendiente. No profile is claimed.",
+  "listings": [
+    {"nombre": "Google Business Profile", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "The Knot", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "WeddingWire", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "Zola", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "PartySlate", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "Carats and Cake", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "Pinterest", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "Instagram", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "Facebook", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"},
+    {"nombre": "X", "url": "", "estado": "pendiente", "fecha_publicado": "", "tipo": "find_us"}
+  ]
+}
