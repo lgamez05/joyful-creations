@@ -529,7 +529,8 @@ figcaption { margin-top: 8px; }
 .logo-lockup {
   display: block;
   width: fit-content;
-  padding: 16px;
+  padding-block: 25px;
+  padding-inline: 16px;
   background: var(--ivory);
   line-height: 0;
 }
