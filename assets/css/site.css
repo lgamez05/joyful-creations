@@ -941,3 +941,27 @@ textarea[aria-invalid="true"] {
     scroll-behavior: auto !important;
   }
 }
+
+.ph.ph-has-photo .ph-frame {
+  position: relative;
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.ph.ph-has-photo .ph-frame picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.ph.ph-has-photo .ph-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ph.ph-has-photo .credit {
+  display: block;
+}

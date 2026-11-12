@@ -132,7 +132,86 @@ def load_json(name: str):
     return json.loads((CONTENT / name).read_text(encoding="utf-8"))
 
 
-def ph(slot: str, variant: str, description: str, caption: str) -> str:
+_PHOTOS: dict[str, dict] | None = None
+
+PHOTO_SIZES = {
+    "hero": "100vw",
+    "wide": "100vw",
+    "landscape": "(min-width: 700px) 50vw, 100vw",
+    "portrait": "(min-width: 700px) 40vw, 100vw",
+    "square": "(min-width: 700px) 33vw, 50vw",
+}
+
+
+def photos() -> dict[str, dict]:
+    global _PHOTOS
+    if _PHOTOS is None:
+        raw = load_json("photos.json")
+        if not isinstance(raw, list):
+            raise SystemExit("content/photos.json must be a list of photo slots.")
+        loaded: dict[str, dict] = {}
+        for item in raw:
+            photo_id = item.get("id")
+            if not isinstance(photo_id, str) or not photo_id or photo_id in loaded:
+                raise SystemExit(f"photos.json has a missing or duplicate id: {photo_id!r}")
+            loaded[photo_id] = item
+        _PHOTOS = loaded
+    return _PHOTOS
+
+
+def jpeg_size(path: Path) -> tuple[int, int]:
+    data = path.read_bytes()
+    if len(data) < 4 or data[0:2] != b"\xff\xd8":
+        raise SystemExit(f"Not a JPEG: {path}")
+    index = 2
+    sof = {0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF}
+    while index + 1 < len(data):
+        if data[index] != 0xFF:
+            break
+        while index < len(data) and data[index] == 0xFF:
+            index += 1
+        if index >= len(data):
+            break
+        marker = data[index]
+        index += 1
+        if marker in (0xD8, 0xD9) or 0xD0 <= marker <= 0xD7:
+            continue
+        if index + 2 > len(data):
+            break
+        length = int.from_bytes(data[index : index + 2], "big")
+        if marker in sof and index + 7 <= len(data):
+            height = int.from_bytes(data[index + 3 : index + 5], "big")
+            width = int.from_bytes(data[index + 5 : index + 7], "big")
+            return width, height
+        if length < 2:
+            break
+        index += length
+    raise SystemExit(f"JPEG size not found: {path}")
+
+
+def photo_files(stem: str) -> dict[str, list[tuple[int, Path]]]:
+    folder = ROOT / "assets" / "photos"
+    found: dict[str, list[tuple[int, Path]]] = {"avif": [], "webp": [], "jpg": []}
+    if not folder.is_dir():
+        return found
+    for ext in ("avif", "webp", "jpg", "jpeg"):
+        key = "jpg" if ext == "jpeg" else ext
+        for path in sorted(folder.glob(f"{stem}-*.{ext}")):
+            match = re.fullmatch(rf"{re.escape(stem)}-(\d+)\.{ext}", path.name)
+            if match:
+                found[key].append((int(match.group(1)), path))
+    for items in found.values():
+        items.sort()
+    return found
+
+
+def photo_text(value: object) -> str:
+    if not isinstance(value, str):
+        return ""
+    return value.strip()
+
+
+def placeholder(slot: str, variant: str, description: str, caption: str) -> str:
     return f"""
 <figure class="ph ph-{esc(variant)}">
   <div class="ph-frame">
@@ -144,6 +223,83 @@ def ph(slot: str, variant: str, description: str, caption: str) -> str:
   <figcaption>{esc(caption)}</figcaption>
 </figure>
 """.strip()
+
+
+def picture_for(entry: dict, variant: str, depth: int, mode: str) -> str | None:
+    """Responsive picture, or None when the slot is not cleared to publish."""
+    if entry.get("permiso") is not True:
+        return None
+    stem = photo_text(entry.get("file")).lower()
+    if not stem or "/" in stem or "\\" in stem or ".." in stem:
+        return None
+    groups = photo_files(stem)
+    jpegs = groups["jpg"]
+    if not jpegs:
+        return None
+    width, height = jpeg_size(jpegs[-1][1])
+    declared_w = entry.get("width")
+    declared_h = entry.get("height")
+    if isinstance(declared_w, int) and isinstance(declared_h, int) and declared_w > 0 and declared_h > 0:
+        width, height = declared_w, declared_h
+    sizes = PHOTO_SIZES.get(variant, "100vw")
+    loading = "eager" if variant == "hero" else "lazy"
+
+    def srcset(items: list[tuple[int, Path]]) -> str:
+        parts = []
+        for item_width, path in items:
+            url = asset(depth, f"assets/photos/{path.name}", mode)
+            parts.append(f"{esc(url)} {item_width}w")
+        return ", ".join(parts)
+
+    lines = ["<picture>"]
+    for ext, mime in (("avif", "image/avif"), ("webp", "image/webp")):
+        if groups[ext]:
+            lines.append(f'  <source type="{mime}" srcset="{srcset(groups[ext])}" sizes="{esc(sizes)}">')
+    src = asset(depth, f"assets/photos/{jpegs[-1][1].name}", mode)
+    lines.append(
+        "  "
+        + f'<img src="{esc(src)}" srcset="{srcset(jpegs)}" sizes="{esc(sizes)}" '
+        + f'width="{width}" height="{height}" alt="{esc(photo_text(entry.get("alt")))}" loading="{loading}">'
+    )
+    lines.append("</picture>")
+    picture = "\n".join("    " + line for line in lines)
+    alt = photo_text(entry.get("alt"))
+    credit = photo_text(entry.get("credito")) or photo_text(entry.get("credit"))
+    bits = []
+    if alt:
+        bits.append(esc(alt))
+    if credit:
+        bits.append(f'<span class="credit">Photo: {esc(credit)}</span>')
+    caption_html = ""
+    if bits:
+        caption_html = "\n  <figcaption>\n    " + "\n    ".join(bits) + "\n  </figcaption>"
+    return f"""<figure class="ph ph-{esc(variant)} ph-has-photo">
+  <div class="ph-frame">
+{picture}
+  </div>{caption_html}
+</figure>"""
+
+
+def ph(
+    slot: str,
+    variant: str,
+    description: str,
+    caption: str,
+    *,
+    photo: str | None = None,
+    depth: int = 0,
+    mode: str = "relative",
+) -> str:
+    """Placeholder frame, or a picture when the slot file exists and permiso is true."""
+    if not photo:
+        return placeholder(slot, variant, description, caption)
+    entry = photos().get(photo)
+    if entry is None:
+        raise SystemExit(f"photos.json has no entry for {photo}")
+    rendered = picture_for(entry, variant, depth, mode)
+    if rendered is None:
+        return placeholder(slot, variant, description, caption)
+    return rendered
 
 
 def piece_caption(piece: str) -> str:
@@ -698,7 +854,7 @@ def inquiry_form(depth: int, mode: str) -> str:
 """.strip()
 
 
-def filter_gallery(frames, filters) -> str:
+def filter_gallery(frames, filters, depth: int, mode: str) -> str:
     buttons = ['<button type="button" data-filter="all" aria-pressed="true">All</button>']
     for key, label in filters:
         buttons.append(
@@ -707,7 +863,7 @@ def filter_gallery(frames, filters) -> str:
     cards = []
     for slot, cat, piece in frames:
         cards.append(
-            f'<div class="span-4 gallery-item" data-cat="{esc(cat)}">{ph(slot, "square", "Real photograph not provided. Intended subject: " + piece + ".", piece_caption(piece))}</div>'
+            f'<div class="span-4 gallery-item" data-cat="{esc(cat)}">{ph(slot, "square", "Real photograph not provided. Intended subject: " + piece + ".", piece_caption(piece), photo=slot, depth=depth, mode=mode)}</div>'
         )
     return f"""
 <div data-filter-group>
@@ -730,12 +886,12 @@ def render_home(page, faq, mode):
     depth = depth_of(page["path"])
     featured = [item for item in PORTFOLIO if item[0] in {"G1-01", "G1-02", "G1-03", "G1-05", "G1-06", "G1-07"}]
     cards = "".join(
-        f'<div class="span-4 gallery-item">{ph(slot, "square", "Real photograph not provided. Intended subject: " + piece + ".", piece_caption(piece))}</div>'
+        f'<div class="span-4 gallery-item">{ph(slot, "square", "Real photograph not provided. Intended subject: " + piece + ".", piece_caption(piece), photo=slot, depth=depth, mode=mode)}</div>'
         for slot, _cat, piece in featured
     )
     return f"""
 <section class="hero">
-  {ph("H1", "hero", "Intended subject: a wedding reception table with a menu, a table number, and a favor. Real photograph not provided.", "Placeholder H1. Not a photograph of finished work, and not an event by Joyful Creations LI.")}
+  {ph("H1", "hero", "Intended subject: a wedding reception table with a menu, a table number, and a favor. Real photograph not provided.", "Placeholder H1. Not a photograph of finished work, and not an event by Joyful Creations LI.", photo="H1-01", depth=depth, mode=mode)}
   <div class="wrap hero-copy">
     <p class="tagline">{esc(SLOGAN)}</p>
     <h1>{esc(page["h1"])}</h1>
@@ -750,19 +906,19 @@ def render_home(page, faq, mode):
   <div class="wrap grid">
     <div class="span-4">
       <a class="card-link" href="{href(depth, "weddings", mode)}">
-        {ph("W2", "landscape", "Intended subject: wedding day-of paper. Real photograph not provided.", "Placeholder W2. Not a photograph of finished work.")}
+        {ph("W2", "landscape", "Intended subject: wedding day-of paper. Real photograph not provided.", "Placeholder W2. Not a photograph of finished work.", photo="W2-01-menus", depth=depth, mode=mode)}
         <h2>Weddings</h2>
       </a>
     </div>
     <div class="span-4">
       <a class="card-link" href="{href(depth, "bar-bat-mitzvahs", mode)}">
-        {ph("M1", "landscape", "Intended subject: a bar or bat mitzvah table or display. Real photograph not provided.", "Placeholder M1. Not a photograph of finished work.")}
+        {ph("M1", "landscape", "Intended subject: a bar or bat mitzvah table or display. Real photograph not provided.", "Placeholder M1. Not a photograph of finished work.", photo="M1-01", depth=depth, mode=mode)}
         <h2>Bar &amp; bat mitzvahs</h2>
       </a>
     </div>
     <div class="span-4">
       <a class="card-link" href="{href(depth, "stationery", mode)}">
-        {ph("S1", "landscape", "Intended subject: an invitation suite, flat lay. Real photograph not provided.", "Placeholder S1. Not a photograph of finished work.")}
+        {ph("S1", "landscape", "Intended subject: an invitation suite, flat lay. Real photograph not provided.", "Placeholder S1. Not a photograph of finished work.", photo="S1-01", depth=depth, mode=mode)}
         <h2>Stationery</h2>
       </a>
     </div>
@@ -771,13 +927,13 @@ def render_home(page, faq, mode):
 <section class="section band">
   <div class="wrap grid">
     <div class="span-6">
-      {ph("H2", "landscape", "Intended subject: an escort-card display, to sit beside the wedding hero. Real photograph not provided.", "Placeholder H2. Not a photograph of finished work.")}
+      {ph("H2", "landscape", "Intended subject: an escort-card display, to sit beside the wedding hero. Real photograph not provided.", "Placeholder H2. Not a photograph of finished work.", photo="H2-01", depth=depth, mode=mode)}
     </div>
     <div class="span-6">
       <h2>Every piece is custom. Every detail is handmade.</h2>
       <h3>Made by hand</h3>
       <p>Favors, menus, escort cards, seating charts, and signage are planned for one celebration and finished by hand.</p>
-      {ph("H3", "wide", "Intended subject: a paper detail. Real photograph not provided.", "Placeholder H3. Not a photograph of finished work.")}
+      {ph("H3", "wide", "Intended subject: a paper detail. Real photograph not provided.", "Placeholder H3. Not a photograph of finished work.", photo="H3-01", depth=depth, mode=mode)}
     </div>
   </div>
 </section>
@@ -790,7 +946,7 @@ def render_home(page, faq, mode):
       <a class="btn btn-secondary" href="{href(depth, "about", mode)}">Meet Jonah</a>
     </div>
     <div class="span-6 bio-photo">
-      {ph("B1", "landscape", "Intended subject: a horizontal portrait of Jonah. Real photograph not provided. No face is shown.", "Placeholder B1, horizontal. Not a photograph.")}
+      {ph("B1", "landscape", "Intended subject: a horizontal portrait of Jonah. Real photograph not provided. No face is shown.", "Placeholder B1, horizontal. Not a photograph.", photo="B1-01-H", depth=depth, mode=mode)}
     </div>
   </div>
 </section>
@@ -823,7 +979,7 @@ def render_home(page, faq, mode):
       <a class="btn btn-secondary" href="{href(depth, "celebrations", mode)}">Other celebrations</a>
     </div>
     <div class="span-6">
-      {ph("R1", "landscape", "Intended subject: a bridal shower table with favors and paper. Real photograph not provided.", "Placeholder R1. Not a photograph of finished work.")}
+      {ph("R1", "landscape", "Intended subject: a bridal shower table with favors and paper. Real photograph not provided.", "Placeholder R1. Not a photograph of finished work.", photo="R1-01", depth=depth, mode=mode)}
     </div>
   </div>
 </section>
@@ -852,7 +1008,7 @@ def render_about(page, faq, mode):
     {crumbs_html(depth, crumbs, mode)}
     <div class="grid">
       <div class="span-5">
-        {ph("B1", "portrait", "Intended subject: a vertical portrait of Jonah. Real photograph not provided. No face is shown.", "Placeholder B1, vertical. Not a photograph. A last name is not published.")}
+        {ph("B1", "portrait", "Intended subject: a vertical portrait of Jonah. Real photograph not provided. No face is shown.", "Placeholder B1, vertical. Not a photograph. A last name is not published.", photo="B1-02-V", depth=depth, mode=mode)}
       </div>
       <div class="span-7">
         <h1>{esc(page["h1"])}</h1>
@@ -868,8 +1024,8 @@ def render_about(page, faq, mode):
     <h2>How Jonah works</h2>
     <p>Everything is custom. I design every piece myself and make it by hand.</p>
     <div class="grid">
-      <div class="span-6">{ph("B2", "landscape", "Intended subject: hands working on a piece. Real photograph not provided.", "Placeholder B2, first frame. Not a photograph.")}</div>
-      <div class="span-6">{ph("B2", "landscape", "Intended subject: a piece in process. Real photograph not provided.", "Placeholder B2, second frame. Not a photograph.")}</div>
+      <div class="span-6">{ph("B2", "landscape", "Intended subject: hands working on a piece. Real photograph not provided.", "Placeholder B2, first frame. Not a photograph.", photo="B2-01", depth=depth, mode=mode)}</div>
+      <div class="span-6">{ph("B2", "landscape", "Intended subject: a piece in process. Real photograph not provided.", "Placeholder B2, second frame. Not a photograph.", photo="B2-02", depth=depth, mode=mode)}</div>
     </div>
   </div>
 </section>
@@ -889,7 +1045,7 @@ def render_weddings(page, faq, mode):
     ids = ["lead-time", "custom", "seating"]
     return f"""
 <section class="hero">
-  {ph("W2", "hero", "Intended subject: wedding day-of paper. Real photograph not provided.", "Placeholder W2. Not a photograph of finished work.")}
+  {ph("W2", "hero", "Intended subject: wedding day-of paper. Real photograph not provided.", "Placeholder W2. Not a photograph of finished work.", photo="W2-01-menus", depth=depth, mode=mode)}
   <div class="wrap hero-copy">
     {crumbs_html(depth, crumbs, mode)}
     <h1>{esc(page["h1"])}</h1>
@@ -900,13 +1056,13 @@ def render_weddings(page, faq, mode):
   <div class="wrap grid">
     <div class="span-6">
       <a class="card-link" href="{href(depth, "weddings/custom-favors", mode)}">
-        {ph("W1", "landscape", "Intended subject: wedding favors. Real photograph not provided.", "Placeholder W1. Not a photograph of finished work.")}
+        {ph("W1", "landscape", "Intended subject: wedding favors. Real photograph not provided.", "Placeholder W1. Not a photograph of finished work.", photo="W1-01", depth=depth, mode=mode)}
         <h2>Custom favors</h2>
       </a>
     </div>
     <div class="span-6">
       <a class="card-link" href="{href(depth, "weddings/day-of-details", mode)}">
-        {ph("W2", "landscape", "Intended subject: menus, escort cards, seating, and signage. Real photograph not provided.", "Placeholder W2. Not a photograph of finished work.")}
+        {ph("W2", "landscape", "Intended subject: menus, escort cards, seating, and signage. Real photograph not provided.", "Placeholder W2. Not a photograph of finished work.", photo="W2-01-menus", depth=depth, mode=mode)}
         <h2>Day-of details</h2>
       </a>
     </div>
@@ -919,7 +1075,7 @@ def render_weddings(page, faq, mode):
       <p>Invitation suites live in the stationery section.</p>
       <a class="btn btn-secondary" href="{href(depth, "stationery/invitations", mode)}">Wedding invitations</a>
     </div>
-    <div class="span-6">{ph("S1", "landscape", "Intended subject: an invitation suite. Real photograph not provided.", "Placeholder S1. Not a photograph of finished work.")}</div>
+    <div class="span-6">{ph("S1", "landscape", "Intended subject: an invitation suite. Real photograph not provided.", "Placeholder S1. Not a photograph of finished work.", photo="S1-01", depth=depth, mode=mode)}</div>
   </div>
 </section>
 {faq_section(depth, faq, ids, mode)}
@@ -932,13 +1088,13 @@ def render_favors(page, faq, mode):
     crumbs = [("Home", ""), ("Weddings", "weddings"), ("Custom favors", None)]
     ids = ["lead-time", "handmade", "custom"]
     frames = [
-        ph("W1", "square", "Intended subject: wedding favors, flat lay. Real photograph not provided.", piece_caption("Wedding favors")),
-        ph("W1", "square", "Intended subject: a wedding favor detail. Real photograph not provided.", piece_caption("Wedding favor detail")),
+        ph("W1", "square", "Intended subject: wedding favors, flat lay. Real photograph not provided.", piece_caption("Wedding favors"), photo="W1-01", depth=depth, mode=mode),
+        ph("W1", "square", "Intended subject: a wedding favor detail. Real photograph not provided.", piece_caption("Wedding favor detail"), photo="W1-02", depth=depth, mode=mode),
     ]
     extra = []
     for slot, _cat, piece in PORTFOLIO[:4]:
         extra.append(
-            f'<div class="span-4">{ph(slot, "square", "Real photograph not provided. Intended subject: " + piece + ".", piece_caption(piece))}</div>'
+            f'<div class="span-4">{ph(slot, "square", "Real photograph not provided. Intended subject: " + piece + ".", piece_caption(piece), photo=slot, depth=depth, mode=mode)}</div>'
         )
     return f"""
 <section class="section">
@@ -963,20 +1119,20 @@ def render_day_of(page, faq, mode):
     crumbs = [("Home", ""), ("Weddings", "weddings"), ("Day-of details", None)]
     ids = ["seating-include", "seating", "handmade"]
     subs = [
-        ("Menus", "Menus designed as a custom paper piece for the celebration.", "W2 frame 1 of 4"),
-        ("Escort cards", "Escort cards to help guests find their place.", "W2 frame 2 of 4"),
-        ("Table numbers", "Table numbers designed with the rest of the day-of paper.", "W2 frame 3 of 4"),
-        ("Seating charts", "Seating charts designed and made by hand for the celebration.", "W2 frame 4 of 4"),
-        ("Day-of signage", "Signage for the celebration, designed with the other paper details.", "W2 extra labeled frame"),
+        ("Menus", "Menus designed as a custom paper piece for the celebration.", "W2 frame 1 of 4", "W2-01-menus"),
+        ("Escort cards", "Escort cards to help guests find their place.", "W2 frame 2 of 4", "W2-02-escort"),
+        ("Table numbers", "Table numbers designed with the rest of the day-of paper.", "W2 frame 3 of 4", "W2-03-table-numbers"),
+        ("Seating charts", "Seating charts designed and made by hand for the celebration.", "W2 frame 4 of 4", "W2-04-seating"),
+        ("Day-of signage", "Signage for the celebration, designed with the other paper details.", "W2 extra labeled frame", "W2-05-signage"),
     ]
     blocks = []
-    for title, text, slot in subs:
+    for title, text, slot, photo_id in subs:
         blocks.append(
             f"""
 <div class="span-6">
   <h2>{esc(title)}</h2>
   <p>{esc(text)}</p>
-  {ph(slot, "landscape", "Intended subject: " + title.lower() + ". Real photograph not provided. The W2 set asks for four photographs.", piece_caption(title))}
+  {ph(slot, "landscape", "Intended subject: " + title.lower() + ". Real photograph not provided. The W2 set asks for four photographs.", piece_caption(title), photo=photo_id, depth=depth, mode=mode)}
 </div>
 """
         )
@@ -1000,11 +1156,11 @@ def render_mitzvah(page, faq, mode):
     frames = []
     for index in range(1, 4):
         frames.append(
-            f'<div class="span-4">{ph(f"M1 frame {index} of 3", "landscape", "Intended subject: a bar or bat mitzvah table or display. Real photograph not provided.", piece_caption("Bar and bat mitzvah table or display"))}</div>'
+            f'<div class="span-4">{ph(f"M1 frame {index} of 3", "landscape", "Intended subject: a bar or bat mitzvah table or display. Real photograph not provided.", piece_caption("Bar and bat mitzvah table or display"), photo=f"M1-0{index}", depth=depth, mode=mode)}</div>'
         )
     return f"""
 <section class="hero">
-  {ph("M1", "hero", "Intended subject: a bar or bat mitzvah display. Real photograph not provided.", "Placeholder M1. Not a photograph of finished work.")}
+  {ph("M1", "hero", "Intended subject: a bar or bat mitzvah display. Real photograph not provided.", "Placeholder M1. Not a photograph of finished work.", photo="M1-01", depth=depth, mode=mode)}
   <div class="wrap hero-copy">
     {crumbs_html(depth, crumbs, mode)}
     <h1>{esc(page["h1"])}</h1>
@@ -1037,8 +1193,8 @@ def render_mitzvah_favors(page, faq, mode):
     <h1>{esc(page["h1"])}</h1>
     <p class="prose">Favors for a bar or bat mitzvah are personalized around the guest of honor and made by hand. This page does not list a catalog of finished products.</p>
     <div class="grid">
-      <div class="span-6">{ph("M2 frame 1 of 2", "square", "Intended subject: mitzvah favors, flat lay. Real photograph not provided.", piece_caption("Bar and bat mitzvah favors"))}</div>
-      <div class="span-6">{ph("M2 frame 2 of 2", "square", "Intended subject: a mitzvah favor detail. Real photograph not provided.", piece_caption("Bar and bat mitzvah favor detail"))}</div>
+      <div class="span-6">{ph("M2 frame 1 of 2", "square", "Intended subject: mitzvah favors, flat lay. Real photograph not provided.", piece_caption("Bar and bat mitzvah favors"), photo="M2-01", depth=depth, mode=mode)}</div>
+      <div class="span-6">{ph("M2 frame 2 of 2", "square", "Intended subject: a mitzvah favor detail. Real photograph not provided.", piece_caption("Bar and bat mitzvah favor detail"), photo="M2-02", depth=depth, mode=mode)}</div>
     </div>
   </div>
 </section>
@@ -1055,7 +1211,7 @@ def render_mitzvah_day(page, faq, mode):
     subjects = ["menus", "escort cards", "a seating chart"]
     for index, subject in enumerate(subjects, start=1):
         frames.append(
-            f'<div class="span-4"><h2>{esc(subject.capitalize())}</h2>{ph(f"M3 frame {index} of 3", "landscape", "Intended subject: " + subject + ". Real photograph not provided.", piece_caption("Bar and bat mitzvah " + subject))}</div>'
+            f'<div class="span-4"><h2>{esc(subject.capitalize())}</h2>{ph(f"M3 frame {index} of 3", "landscape", "Intended subject: " + subject + ". Real photograph not provided.", piece_caption("Bar and bat mitzvah " + subject), photo=f"M3-0{index}", depth=depth, mode=mode)}</div>'
         )
     return f"""
 <section class="section">
@@ -1082,7 +1238,7 @@ def render_celebrations(page, faq, mode):
     <h1>{esc(page["h1"])}</h1>
     <p class="prose">Bridal showers and other celebrations are part of the work, beside weddings and bar and bat mitzvahs. They are not the center of the site.</p>
     <div class="grid">
-      <div class="span-6">{ph("R1 frame 1 of 2", "landscape", "Intended subject: a bridal shower table. Real photograph not provided.", piece_caption("Bridal shower favors and paper"))}</div>
+      <div class="span-6">{ph("R1 frame 1 of 2", "landscape", "Intended subject: a bridal shower table. Real photograph not provided.", piece_caption("Bridal shower favors and paper"), photo="R1-01", depth=depth, mode=mode)}</div>
       <div class="span-6">
         <h2>Bridal showers</h2>
         <p>Favors and paper details for a bridal shower.</p>
@@ -1108,8 +1264,8 @@ def render_bridal(page, faq, mode):
     <h1>{esc(page["h1"])}</h1>
     <p class="prose">Custom favors and paper details for a bridal shower, designed and made by hand.</p>
     <div class="grid">
-      <div class="span-6">{ph("R1 frame 1 of 2", "landscape", "Intended subject: bridal shower favors. Real photograph not provided.", piece_caption("Bridal shower favors"))}</div>
-      <div class="span-6">{ph("R1 frame 2 of 2", "landscape", "Intended subject: bridal shower paper details. Real photograph not provided.", piece_caption("Bridal shower paper details"))}</div>
+      <div class="span-6">{ph("R1 frame 1 of 2", "landscape", "Intended subject: bridal shower favors. Real photograph not provided.", piece_caption("Bridal shower favors"), photo="R1-01", depth=depth, mode=mode)}</div>
+      <div class="span-6">{ph("R1 frame 2 of 2", "landscape", "Intended subject: bridal shower paper details. Real photograph not provided.", piece_caption("Bridal shower paper details"), photo="R1-02", depth=depth, mode=mode)}</div>
     </div>
   </div>
 </section>
@@ -1124,7 +1280,7 @@ def render_stationery(page, faq, mode):
     ids = ["prices", "custom", "handmade"]
     return f"""
 <section class="hero">
-  {ph("S1", "hero", "Intended subject: an invitation suite, flat lay. Real photograph not provided.", "Placeholder S1. Not a photograph of finished work.")}
+  {ph("S1", "hero", "Intended subject: an invitation suite, flat lay. Real photograph not provided.", "Placeholder S1. Not a photograph of finished work.", photo="S1-01", depth=depth, mode=mode)}
   <div class="wrap hero-copy">
     {crumbs_html(depth, crumbs, mode)}
     <h1>{esc(page["h1"])}</h1>
@@ -1135,13 +1291,13 @@ def render_stationery(page, faq, mode):
   <div class="wrap grid">
     <div class="span-6">
       <a class="card-link" href="{href(depth, "stationery/invitations", mode)}">
-        {ph("S1", "landscape", "Intended subject: invitations. Real photograph not provided.", "Placeholder S1. Not a photograph of finished work.")}
+        {ph("S1", "landscape", "Intended subject: invitations. Real photograph not provided.", "Placeholder S1. Not a photograph of finished work.", photo="S1-01", depth=depth, mode=mode)}
         <h2>Invitations</h2>
       </a>
     </div>
     <div class="span-6">
       <a class="card-link" href="{href(depth, "stationery/portfolio", mode)}">
-        {ph("S3", "landscape", "Intended subject: stationery pieces. Real photograph not provided.", "Placeholder S3. Not a photograph of finished work.")}
+        {ph("S3", "landscape", "Intended subject: stationery pieces. Real photograph not provided.", "Placeholder S3. Not a photograph of finished work.", photo="S3-01", depth=depth, mode=mode)}
         <h2>Portfolio</h2>
       </a>
     </div>
@@ -1163,12 +1319,12 @@ def render_invitations(page, faq, mode):
     crumbs = [("Home", ""), ("Stationery", "stationery"), ("Invitations", None)]
     ids = ["invitations-lead", "handmade", "prices"]
     frames = [
-        ph("S1 frame 1 of 2", "square", "Intended subject: an invitation suite. Real photograph not provided.", piece_caption("Invitation suite")),
-        ph("S1 frame 2 of 2", "square", "Intended subject: an invitation suite detail. Real photograph not provided.", piece_caption("Invitation suite detail")),
+        ph("S1 frame 1 of 2", "square", "Intended subject: an invitation suite. Real photograph not provided.", piece_caption("Invitation suite"), photo="S1-01", depth=depth, mode=mode),
+        ph("S1 frame 2 of 2", "square", "Intended subject: an invitation suite detail. Real photograph not provided.", piece_caption("Invitation suite detail"), photo="S1-02", depth=depth, mode=mode),
     ]
     extra = []
     for slot, _cat, piece in STATIONERY_FRAMES[:4]:
-        extra.append(f'<div class="span-4">{ph(slot, "square", "Real photograph not provided. Intended subject: " + piece + ".", piece_caption(piece))}</div>')
+        extra.append(f'<div class="span-4">{ph(slot, "square", "Real photograph not provided. Intended subject: " + piece + ".", piece_caption(piece), photo=slot, depth=depth, mode=mode)}</div>')
     return f"""
 <section class="section">
   <div class="wrap">
@@ -1202,7 +1358,7 @@ def render_stationery_portfolio(page, faq, mode):
     {crumbs_html(depth, crumbs, mode)}
     <h1>{esc(page["h1"])}</h1>
     <p class="prose">Eight labeled frames stand in for stationery photographs that are not published yet. A caption names the piece, not an event, and no photographer is credited.</p>
-    {filter_gallery(STATIONERY_FRAMES, filters)}
+    {filter_gallery(STATIONERY_FRAMES, filters, depth, mode)}
   </div>
 </section>
 {cta(depth, mode, target="stationery/inquiry", label="Start a stationery inquiry")}
@@ -1219,7 +1375,7 @@ def render_portfolio(page, faq, mode):
     {crumbs_html(depth, crumbs, mode)}
     <h1>{esc(page["h1"])}</h1>
     <p class="prose">Twelve labeled frames stand in for photographs that are not published yet. Captions name pieces by Joyful Creations LI. They do not call an event a production of the studio. No client or venue is named.</p>
-    {filter_gallery(PORTFOLIO, filters)}
+    {filter_gallery(PORTFOLIO, filters, depth, mode)}
   </div>
 </section>
 {cta(depth, mode)}
@@ -1248,9 +1404,9 @@ def render_process(page, faq, mode):
     <h2>Payment</h2>
     <p>Payment methods are not published on this website. This site does not take payment, deposits, or checkout. A change and cancellation policy is not published, so online payment is not offered. [PENDIENTE]</p>
     <div class="grid">
-      <div class="span-4">{ph("P1 frame 1 of 3", "landscape", "Intended subject: design on a screen. Real photograph not provided.", "Placeholder P1. Not a photograph.")}</div>
-      <div class="span-4">{ph("P1 frame 2 of 3", "landscape", "Intended subject: handmade assembly. Real photograph not provided.", "Placeholder P1. Not a photograph.")}</div>
-      <div class="span-4">{ph("P1 frame 3 of 3", "landscape", "Intended subject: pieces prepared to leave the studio. Delivery is not confirmed. Real photograph not provided.", "Placeholder P1. Not a photograph, and not a delivery claim.")}</div>
+      <div class="span-4">{ph("P1 frame 1 of 3", "landscape", "Intended subject: design on a screen. Real photograph not provided.", "Placeholder P1. Not a photograph.", photo="P1-01-diseno", depth=depth, mode=mode)}</div>
+      <div class="span-4">{ph("P1 frame 2 of 3", "landscape", "Intended subject: handmade assembly. Real photograph not provided.", "Placeholder P1. Not a photograph.", photo="P1-02-armado", depth=depth, mode=mode)}</div>
+      <div class="span-4">{ph("P1 frame 3 of 3", "landscape", "Intended subject: pieces prepared to leave the studio. Delivery is not confirmed. Real photograph not provided.", "Placeholder P1. Not a photograph, and not a delivery claim.", photo="P1-03-empacado", depth=depth, mode=mode)}</div>
     </div>
   </div>
 </section>
@@ -1292,7 +1448,7 @@ def render_area(page, faq, mode):
     frames = []
     for slot, _cat, piece in (PORTFOLIO[0], PORTFOLIO[4], PORTFOLIO[8]):
         frames.append(
-            f'<div class="span-4">{ph(slot + " · " + name, "landscape", "Real photograph not provided. This is not a venue and not a local event in " + name + ".", "Placeholder for " + piece + " by Joyful Creations LI. Not an event in " + name + ".")}</div>'
+            f'<div class="span-4">{ph(slot + " · " + name, "landscape", "Real photograph not provided. This is not a venue and not a local event in " + name + ".", "Placeholder for " + piece + " by Joyful Creations LI. Not an event in " + name + ".", photo=slot, depth=depth, mode=mode)}</div>'
         )
     return f"""
 <section class="section">
@@ -1339,7 +1495,7 @@ def render_quote(page, faq, mode):
       <div class="span-5">
         <h1>{esc(page["h1"])}</h1>
         <p>Tell us about your celebration. Fields marked with * are required. There is no budget field and no payment.</p>
-        {ph("H3", "landscape", "Intended subject: a paper detail beside the form. Real photograph not provided.", "Placeholder H3. Not a photograph of finished work.")}
+        {ph("H3", "landscape", "Intended subject: a paper detail beside the form. Real photograph not provided.", "Placeholder H3. Not a photograph of finished work.", photo="H3-01", depth=depth, mode=mode)}
       </div>
       <div class="span-7">
         {quote_form(depth, mode)}
