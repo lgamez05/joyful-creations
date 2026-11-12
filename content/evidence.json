@@ -1,0 +1,47 @@
+{
+  "classes": {
+    "Q1-Q21": "Summary recovered by Goku. Not a fresh interview transcript.",
+    "Q22": "Corrected quotation.",
+    "Q23-Q54": "Call quotations relayed in notes. Not checked against the audio."
+  },
+  "rule": "Where public copy depends on Q23-Q54, the wording stays conservative and the item is listed as unverified.",
+  "unverified_on_the_site": [
+    {
+      "ids": ["Q24"],
+      "topic": "Lead time of about two weeks",
+      "treatment": "Published only as a planning note, with an explicit statement that it is not a guaranteed turnaround and not a promise of capacity."
+    },
+    {
+      "ids": ["Q52", "Q53", "Q9"],
+      "topic": "Custom work designed and made by hand",
+      "treatment": "The spec sentences are used. Q52 and Q53 are relay notes and are not described as audio-checked."
+    },
+    {
+      "ids": ["Q54"],
+      "topic": "Seating charts",
+      "treatment": "Described as a day-of paper piece the studio designs. Not described as audio-checked."
+    },
+    {
+      "ids": ["Q48"],
+      "topic": "Service areas",
+      "treatment": "New York, New Jersey, and Connecticut are also supported by Q4 in the recovered summary. No venues are named."
+    }
+  ],
+  "withheld_because_unverified_or_open": [
+    {
+      "ids": ["Q35", "Q36", "Q37"],
+      "topic": "Twelve years as a special events manager, a country club, and earlier weddings and fundraisers",
+      "treatment": "Not published. The about page and home bio use a visible [PENDIENTE] instead of stating those details as fact."
+    },
+    {
+      "ids": ["Q21", "Q22"],
+      "topic": "Payment method names",
+      "treatment": "Not published. The spec says that sentence needs approval before it is public. The site takes no payment."
+    },
+    {
+      "ids": ["Q29", "Q30"],
+      "topic": "Engraving and new custom product lines",
+      "treatment": "Not offered."
+    }
+  ]
+}

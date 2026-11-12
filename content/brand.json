@@ -1,0 +1,26 @@
+{
+  "name": "Joyful Creations LI",
+  "legal_name": "Joyful Creations LI LLC",
+  "slogan": "Where every celebration tells your story",
+  "email": "info@joyfulcreationsli.com",
+  "language": "en",
+  "colors": {
+    "ivory": "#FBF7F1",
+    "linen": "#F1EBE2",
+    "ink": "#1F1D1B",
+    "graphite": "#5A554F",
+    "logo_gold": "#967D53",
+    "logo_gold_deep": "#89734C",
+    "logo_gold_light": "#AC9A7A",
+    "deep_sage": "#4F5D4A",
+    "hairline": "#D9D1C5",
+    "garnet": "#9B2C2C"
+  },
+  "color_rules": {
+    "logo_gold": "decoration only, not text, buttons, or links",
+    "logo_gold_deep": "icons with meaning and field borders, not body text",
+    "logo_gold_light": "fine ornament only",
+    "deep_sage": "visited links",
+    "garnet": "form errors only"
+  }
+}

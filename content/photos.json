@@ -1,0 +1,450 @@
+[
+  {
+    "id": "H1-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "H2-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "H3-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "B1-01-H",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "B1-02-V",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "B2-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "B2-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "W1-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "W1-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "W2-01-menus",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "W2-02-escort",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "W2-03-table-numbers",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "W2-04-seating",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "W2-05-signage",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S1-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S1-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S2-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S2-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-03",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-04",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-05",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-06",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-07",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-08",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-09",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "S3-10",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "M1-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "M1-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "M1-03",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "M2-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "M2-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "M3-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "M3-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "M3-03",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "R1-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "R1-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "K1-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "K1-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "P1-01-diseno",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "P1-02-armado",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "P1-03-empacado",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-02",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-03",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-04",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-05",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-06",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-07",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-08",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-09",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-10",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-11",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-12",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-13",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-14",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-15",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-16",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-17",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-18",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-19",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "G1-20",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  },
+  {
+    "id": "L1-01",
+    "file": "",
+    "permiso": false,
+    "credito": null,
+    "alt": null
+  }
+]

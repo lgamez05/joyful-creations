@@ -1,0 +1,76 @@
+{
+  "items": [
+    {
+      "id": "lead-time",
+      "hub": true,
+      "q": "How far ahead should I order?",
+      "a": "Most orders are planned about two weeks ahead; shorter timelines may be possible — ask us. That figure is a planning note, not a guaranteed turnaround, and it is not a promise of capacity. Tell us your date and we will say what we can consider."
+    },
+    {
+      "id": "last-minute",
+      "hub": true,
+      "q": "Can you handle last-minute orders?",
+      "a": "Sometimes — contact us with your date. We do not promise that a short timeline can be met. Capacity depends on the pieces and the calendar, and nothing on this page is a guarantee. Email the studio with the event date and what you need."
+    },
+    {
+      "id": "custom",
+      "hub": true,
+      "q": "Is everything custom?",
+      "a": "Yes. Everything is custom. Pieces are designed for your celebration rather than taken from a ready-made template. If something is outside the work this site describes, we will say so by email instead of adding it as a new offer."
+    },
+    {
+      "id": "handmade",
+      "hub": true,
+      "q": "Is it handmade?",
+      "a": "Yes. The pieces Joyful Creations LI makes are finished by hand. Design and making stay with the studio. We do not describe another producer's event, or another maker's work, as our own. Ask which parts of an order are handmade."
+    },
+    {
+      "id": "areas",
+      "hub": true,
+      "q": "Which areas do you serve?",
+      "a": "Joyful Creations LI serves celebrations in New York, New Jersey, and Connecticut, including Long Island and New York City. Serving an area is not a statement about delivery or on-site setup. Those details are not confirmed on this website. Tell us the city and state."
+    },
+    {
+      "id": "payments",
+      "hub": true,
+      "q": "Which payment methods do you accept?",
+      "a": "This website does not take payment, deposits, or checkout. How an order is paid is confirmed with you by email after a quote, and the methods are not published here. We do not ask for tax identifiers or documents through these forms."
+    },
+    {
+      "id": "seating",
+      "hub": true,
+      "q": "Do you do seating charts?",
+      "a": "Yes. Seating charts are part of the day-of paper we design and make by hand, along with menus, escort cards, table numbers, and signage. What a chart includes is planned around your celebration. We do not publish guest names or venue names here."
+    },
+    {
+      "id": "deliver",
+      "hub": true,
+      "q": "Do you deliver or set up?",
+      "a": "Whether pieces are delivered, picked up, or set up on site is not confirmed on this website. Serving New York, New Jersey, and Connecticut means we take orders for celebrations there. Ask in your consultation and we will say what is possible. This is not a delivery promise."
+    },
+    {
+      "id": "prices",
+      "hub": true,
+      "q": "Do you publish prices?",
+      "a": "No. Prices are not published on this website. Each order is priced by custom quote. There is no starting price and no budget field on the consultation form. Email us about your celebration and we will reply about the quote by email."
+    },
+    {
+      "id": "seating-include",
+      "hub": false,
+      "q": "What should a seating chart include?",
+      "a": "A seating chart should help guests find their table, using the details you and the studio agree on for that celebration. It may pair names with table numbers or show another arrangement you choose. Guest lists and venue names are not published on this website. The chart is paper we design and make by hand."
+    },
+    {
+      "id": "favor-ideas",
+      "hub": false,
+      "q": "Personalized bar/bat mitzvah favor ideas?",
+      "a": "Personalized favors for a bar or bat mitzvah are designed around the guest of honor and made by hand. This site does not list a catalog of finished products, because each order is custom and photographs of past pieces are not published yet. Tell us about the celebration and we will talk through pieces by email."
+    },
+    {
+      "id": "invitations-lead",
+      "hub": false,
+      "q": "How far ahead should invitations be ordered?",
+      "a": "A lead time for invitation suites is not published here. The planning note used for other orders is not used on this page. Share the date you need the suite, and we will reply by email about whether that date can be met. This is not a guaranteed schedule or a promise of capacity."
+    }
+  ]
+}

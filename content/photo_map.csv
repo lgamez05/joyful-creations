@@ -1,0 +1,19 @@
+slot,count,expected_names,aspect,pages,permiso,credito,alt
+H1,1,H1-01,hero,/,SIN DATO,SIN DATO,SIN DATO
+H2,1,H2-01,3/2,/,SIN DATO,SIN DATO,SIN DATO
+H3,1,H3-01,16/9 and 3/2 on /quote,"/, /quote",SIN DATO,SIN DATO,SIN DATO
+B1,2,B1-01-H; B1-02-V,3/2 and 3/4,"/, /about",SIN DATO,SIN DATO,SIN DATO
+B2,2,B2-01; B2-02,3/2,/about,SIN DATO,SIN DATO,SIN DATO
+W1,2,W1-01; W1-02,1/1,/weddings/custom-favors,SIN DATO,SIN DATO,SIN DATO
+W2,5,W2-01-menus; W2-02-escort; W2-03-table-numbers; W2-04-seating; W2-05-signage,hero and 3/2,"/, /weddings, /weddings/day-of-details",SIN DATO,SIN DATO,SIN DATO
+S1,2,S1-01; S1-02,"hero, 3/2, and 1/1","/, /stationery, /stationery/invitations",SIN DATO,SIN DATO,SIN DATO
+S2,2,S2-01; S2-02,—,none until G2 is yes,SIN DATO,SIN DATO,SIN DATO
+S3,8-10,S3-01; S3-02; S3-03; S3-04; S3-05; S3-06; S3-07; S3-08; S3-09; S3-10,1/1,"/stationery/portfolio, /stationery/invitations",SIN DATO,SIN DATO,SIN DATO
+M1,3,M1-01; M1-02; M1-03,hero and 3/2,"/, /bar-bat-mitzvahs",SIN DATO,SIN DATO,SIN DATO
+M2,2,M2-01; M2-02,1/1,/bar-bat-mitzvahs/favors,SIN DATO,SIN DATO,SIN DATO
+M3,3,M3-01; M3-02; M3-03,3/2,/bar-bat-mitzvahs/day-of-details,SIN DATO,SIN DATO,SIN DATO
+R1,2,R1-01; R1-02,3/2,"/, /celebrations, /celebrations/bridal-showers",SIN DATO,SIN DATO,SIN DATO
+K1,1-2,K1-01; K1-02,—,none until G8 is yes,SIN DATO,SIN DATO,SIN DATO
+P1,3,P1-01-diseno; P1-02-armado; P1-03-empacado,3/2,/process,SIN DATO,SIN DATO,SIN DATO
+G1,12-20,G1-01; G1-02; G1-03; G1-04; G1-05; G1-06; G1-07; G1-08; G1-09; G1-10; G1-11; G1-12; G1-13; G1-14; G1-15; G1-16; G1-17; G1-18; G1-19; G1-20,1/1 and 3/2 on service areas,"/, /portfolio, /weddings/custom-favors, /service-areas/*",SIN DATO,SIN DATO,SIN DATO
+L1,1,L1-01,—,none,SIN DATO,SIN DATO,SIN DATO

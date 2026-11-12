@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Public host is not set. Loc values are site paths, not absolute URLs. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>/</loc></url>
+  <url><loc>/about/</loc></url>
+  <url><loc>/weddings/</loc></url>
+  <url><loc>/weddings/custom-favors/</loc></url>
+  <url><loc>/weddings/day-of-details/</loc></url>
+  <url><loc>/bar-bat-mitzvahs/</loc></url>
+  <url><loc>/bar-bat-mitzvahs/favors/</loc></url>
+  <url><loc>/bar-bat-mitzvahs/day-of-details/</loc></url>
+  <url><loc>/celebrations/</loc></url>
+  <url><loc>/celebrations/bridal-showers/</loc></url>
+  <url><loc>/stationery/</loc></url>
+  <url><loc>/stationery/invitations/</loc></url>
+  <url><loc>/stationery/portfolio/</loc></url>
+  <url><loc>/stationery/inquiry/</loc></url>
+  <url><loc>/portfolio/</loc></url>
+  <url><loc>/process/</loc></url>
+  <url><loc>/service-areas/</loc></url>
+  <url><loc>/service-areas/long-island/</loc></url>
+  <url><loc>/service-areas/nyc/</loc></url>
+  <url><loc>/service-areas/new-jersey/</loc></url>
+  <url><loc>/service-areas/connecticut/</loc></url>
+  <url><loc>/faq/</loc></url>
+  <url><loc>/quote/</loc></url>
+  <url><loc>/contact/</loc></url>
+  <url><loc>/privacy/</loc></url>
+  <url><loc>/thank-you/</loc></url>
+</urlset>
