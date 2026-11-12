@@ -966,7 +966,7 @@ def render_home(page, faq, mode):
         ("Design", "Pieces are designed for that celebration."),
         ("Handmade", "The pieces the studio takes on are made by hand."),
     ])}
-    <div class="pending"><p>[PENDIENTE] Delivery, pickup, and on-site setup are not confirmed on this site.</p></div>
+    <div class="pending"><p>Delivery, pickup, and on-site setup are not confirmed on this site.</p></div>
     <p><a href="{href(depth, "process", mode)}">Read the process</a></p>
   </div>
 </section>
@@ -1395,14 +1395,14 @@ def render_process(page, faq, mode):
     {steps([
         ("Consultation", "The conversation starts with the consultation form or an email. This review build does not send the form."),
         ("Design proposal", "The studio proposes pieces for the celebration. This is not a catalog order."),
-        ("Revisions", "Revisions are part of the conversation. A revision count is not published. [PENDIENTE]"),
+        ("Revisions", "Revisions are part of the conversation. A revision count is not published."),
         ("Handmade production", "Pieces the studio takes on are made by hand."),
-        ("Handoff", "Delivery, pickup, or on-site setup is not confirmed on this website. [PENDIENTE]"),
+        ("Handoff", "Delivery, pickup, or on-site setup is not confirmed on this website."),
     ], five=True)}
     <h2>Lead time</h2>
     <p>{esc(lead)}</p>
     <h2>Payment</h2>
-    <p>Payment methods are not published on this website. This site does not take payment, deposits, or checkout. A change and cancellation policy is not published, so online payment is not offered. [PENDIENTE]</p>
+    <p>Payment methods are not published on this website. This site does not take payment, deposits, or checkout. A change and cancellation policy is not published, so online payment is not offered.</p>
     <div class="grid">
       <div class="span-4">{ph("P1 frame 1 of 3", "landscape", "Intended subject: design on a screen. Real photograph not provided.", "Placeholder P1. Not a photograph.", photo="P1-01-diseno", depth=depth, mode=mode)}</div>
       <div class="span-4">{ph("P1 frame 2 of 3", "landscape", "Intended subject: handmade assembly. Real photograph not provided.", "Placeholder P1. Not a photograph.", photo="P1-02-armado", depth=depth, mode=mode)}</div>
