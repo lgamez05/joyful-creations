@@ -245,6 +245,15 @@
     if (files && files.files && files.files.length > 3) {
       setInvalid(files, "Choose up to 3 images. Files are not uploaded.");
       messages.push("files");
+    } else if (files && files.files) {
+      var maxBytes = 10 * 1024 * 1024;
+      for (var i = 0; i < files.files.length; i++) {
+        if (files.files[i].size > maxBytes) {
+          setInvalid(files, "Each file must be 10 MB or smaller.");
+          messages.push("files");
+          break;
+        }
+      }
     }
     return messages;
   }
