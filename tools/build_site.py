@@ -1119,11 +1119,11 @@ def render_day_of(page, faq, mode):
     crumbs = [("Home", ""), ("Weddings", "weddings"), ("Day-of details", None)]
     ids = ["seating-include", "seating", "handmade"]
     subs = [
-        ("Menus", "Menus designed as a custom paper piece for the celebration.", "W2 frame 1 of 4", "W2-01-menus"),
-        ("Escort cards", "Escort cards to help guests find their place.", "W2 frame 2 of 4", "W2-02-escort"),
-        ("Table numbers", "Table numbers designed with the rest of the day-of paper.", "W2 frame 3 of 4", "W2-03-table-numbers"),
-        ("Seating charts", "Seating charts designed and made by hand for the celebration.", "W2 frame 4 of 4", "W2-04-seating"),
-        ("Day-of signage", "Signage for the celebration, designed with the other paper details.", "W2 extra labeled frame", "W2-05-signage"),
+        ("Menus", "Menus designed as a custom paper piece for the celebration.", "W2 frame 1 of 5", "W2-01-menus"),
+        ("Escort cards", "Escort cards to help guests find their place.", "W2 frame 2 of 5", "W2-02-escort"),
+        ("Table numbers", "Table numbers designed with the rest of the day-of paper.", "W2 frame 3 of 5", "W2-03-table-numbers"),
+        ("Seating charts", "Seating charts designed and made by hand for the celebration.", "W2 frame 4 of 5", "W2-04-seating"),
+        ("Day-of signage", "Signage for the celebration, designed with the other paper details.", "W2 frame 5 of 5", "W2-05-signage"),
     ]
     blocks = []
     for title, text, slot, photo_id in subs:
@@ -1132,7 +1132,7 @@ def render_day_of(page, faq, mode):
 <div class="span-6">
   <h2>{esc(title)}</h2>
   <p>{esc(text)}</p>
-  {ph(slot, "landscape", "Intended subject: " + title.lower() + ". Real photograph not provided. The W2 set asks for four photographs.", piece_caption(title), photo=photo_id, depth=depth, mode=mode)}
+  {ph(slot, "landscape", "Intended subject: " + title.lower() + ". Real photograph not provided. The W2 set asks for five photographs.", piece_caption(title), photo=photo_id, depth=depth, mode=mode)}
 </div>
 """
         )
